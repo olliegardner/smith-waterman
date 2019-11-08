@@ -3,24 +3,86 @@
 #include <stdio.h>
 #include <string.h>
 
+int calculate_score(char a, char b, int match_score)
+{
+    if (a != b) return -match_score;
+    return match_score;
+}
+
+int get_max_value(int **data, int width, int height, const char *a, const char *b, int match_score, int gap_cost)
+{
+    if (width == 0 || height == 0) 
+    {
+        return 0;
+    }
+
+    int max = 0;
+    int score[3];
+
+    score[2] = data[width - 1][height - 1] + calculate_score(a[width - 1], b[height - 1], match_score);
+    score[1] = data[width - 1][height] - gap_cost;
+    score[0] = data[width][height - 1] - gap_cost;
+
+    for (int i = 0; i < 3; i++)
+    {
+        if (score[i] > max)
+        {
+            max = score[i];
+        }
+    }
+    return max;
+}
+
 scoring_matrix create_matrix(const char *a, const char *b, int match_score, int gap_cost)
 {
-    scoring_matrix matrix = {0, 0, NULL}; // change this!!
-    // fill matrix
+    int width = strlen(a);
+    int height = strlen(b);
+    int **data = malloc(width * sizeof *data);
+
+    //int total_length = width * sizeof(a) + height * sizeof(b);
+
+   
+    //int* matrix_array = malloc(width * height * sizeof(int));
+
+    for (int i = 0; i <= width; i++) 
+    {
+        data[i] = malloc(height * sizeof data[i]);
+    }
+
+    for (int i = 0; i <= width; i++) 
+    {
+        for (int j = 0; j <= height; j++) 
+        {
+            data[i][j] = get_max_value(data, i, j, a, b, match_score, gap_cost);
+        }
+    }
+
+    scoring_matrix matrix = {width, height, data};
+    matrix_as_view(matrix);
+    
     return matrix;
 }
 
 void free_matrix(scoring_matrix matrix)
 {
+    free(&matrix);   
 }
 
 scoring_matrix_view matrix_as_view(scoring_matrix matrix)
 {
-    scoring_matrix_view view = {0, 0, {0, 0, NULL}}; // change this!!
-    // set view
+    scoring_matrix_view view = {matrix.width, matrix.height, {matrix.width, matrix.height, matrix.data}};
+    //print_matrix(view);
     return view;
 }
 
 void print_matrix(scoring_matrix_view view)
 {
+    for (int i = 0; i < view.width; i++)
+    {
+        for (int j = 0; j < view.height; j++)
+        {
+            printf("%d ", view.matrix.data[i][j]);
+        }
+        printf("\n");
+    }
 }

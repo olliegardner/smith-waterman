@@ -9,10 +9,34 @@
 void print_smith_waterman(const char *a, const char *b)
 {
     fprintf(stderr, "print_smith_waterman(\"%s\", \"%s\")\n", a, b);
+    
     // int match_score = 3;
     // int gap_cost = 2;
     // create_matrix
     // traceback
     // print A from traceback result
     // print B from traceback result
+
+    int match_score = 3;
+    int gap_cost = 2;
+
+    scoring_matrix matrix = create_matrix(a, b, match_score, gap_cost);
+    
+    scoring_matrix_view view = {matrix.width, matrix.height, {matrix.width, matrix.height, matrix.data}};
+	print_matrix(view);
+
+    //create_matrix(a, b, match_score, gap_cost);
+    //traceback(matrix_as_view(matrix), a, b, ?, 0);
+    
+    
+    traceback_result * result = traceback(matrix_as_view(matrix), a, b);
+
+    printf("A: %s\n", result->a_);
+    printf("B: %s\n", result->b_);
+
+
+    /*traceback_result result = traceback(matrix_as_view(matrix), a, b, ?, 0);
+
+    printf("A: %s\n", result->a_);
+    printf("B: %s\n", result->b_);*/
 }

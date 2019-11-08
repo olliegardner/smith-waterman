@@ -18,5 +18,47 @@ int main(int argc, char **argv)
     //   call `print_smith_waterman' with the first and second string
     // close the csv file
 
+    FILE * file = fopen("data.csv", "r");
+    char * line = NULL;
+    size_t len = 0;
+
+    if (!file)
+    {
+        perror("Error in opening file");
+        return EXIT_FAILURE;
+    }
+
+    /*while(fgets(buffer, 255, (FILE *) file))
+    {
+        printf("%s\n", buffer);
+    }*/
+
+    while (getline(&line, &len, file))
+    {
+        if (!starts_with("#", line))
+        {
+            printf("%S", line);
+
+
+        }
+    }
+
+    print_smith_waterman("", "");
+
+
+    fclose(file);
+
+    if (line) 
+    {
+        free(line);
+    }
     return EXIT_SUCCESS;
+}
+
+
+bool starts_with(const char *pre, const char *str)
+{
+    size_t lenpre = strlen(pre),
+           lenstr = strlen(str);
+    return lenstr < lenpre ? false : memcmp(pre, str, lenpre) == 0;
 }

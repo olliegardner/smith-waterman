@@ -8,7 +8,7 @@ typedef struct
 {
     size_t width;
     size_t height;
-    int *data;
+    int **data;
 } scoring_matrix;
 
 // A struct representing a "view" into a sub-part of the
