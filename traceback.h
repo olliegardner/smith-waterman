@@ -29,6 +29,19 @@ typedef struct {
 //         b_ = b[j - 1] + '-' + b_ 
 //     return traceback(view[0:i][0:j], a, b, b_, i)
 
+/*
+def traceback(H, a, b, b_='', old_i=0):
+    i, j = find_max_value(H)
+    if H[i, j] == 0:
+        a_ = a[j:j+len(b_)]
+        return a_, b_
+    if (old_i - i > 1):
+        b_ = b[j - 1] + '-' + b_
+    else:
+        b_ = b[j - 1] + b_
+    return traceback(H[0:i, 0:j], a, b, b_, i)
+*/
+
 traceback_result *traceback(scoring_matrix_view view,
                             const char *a,
                             const char *b);
