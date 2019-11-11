@@ -18,7 +18,7 @@ int main(int argc, char **argv)
     //   call `print_smith_waterman' with the first and second string
     // close the csv file
 
-    FILE * file = fopen("data.csv", "r");
+    FILE * file = fopen(argv[1], "r");
     char * line = NULL;
     size_t len = 0;
 
@@ -35,12 +35,12 @@ int main(int argc, char **argv)
 
     while (getline(&line, &len, file))
     {
-        if (!starts_with("#", line))
-        {
+        //if (!starts_with("#", line))
+        //{
             printf("%S", line);
 
 
-        }
+        //}
     }
 
     print_smith_waterman("", "");
