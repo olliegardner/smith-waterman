@@ -128,7 +128,7 @@ void free_matrix(scoring_matrix matrix)
 scoring_matrix_view matrix_as_view(scoring_matrix matrix)
 {
     scoring_matrix_view view = {matrix.width, matrix.height, {matrix.width, matrix.height, matrix.data}};
-    print_matrix(view);
+    //print_matrix(view);
     return view;
 }
 
@@ -139,7 +139,7 @@ void print_matrix(scoring_matrix_view view)
         for (int j = 0; j < view.width; j++)
         {
             //printf("%d ", view.matrix.data[i][j]);
-            printf("%d\t", *(view.matrix.data + i * view.width + j));
+            printf("%d ", *(view.matrix.data + i * view.width + j));
         }
         printf("\n");
     }

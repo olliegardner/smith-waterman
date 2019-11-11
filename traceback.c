@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdio.h>
 
-traceback_result *traceback_help(scoring_matrix_view view, const char* a, const char* b, char* b_, int old_i, int count) {
+traceback_result *traceback_help(scoring_matrix_view view, const char* a, const char* b, char* b_, int old_i) {
     char* a_ = malloc(sizeof(char) * strlen(a));
 
     int i = 0;
@@ -12,20 +12,26 @@ traceback_result *traceback_help(scoring_matrix_view view, const char* a, const 
     int max = 0;
 
     //char* alt_b = "";
+    //*(view.matrix.data + i * view.width + j)
+
+    //print_matrix(view);
 
     for (int x = 0; x < view.height; x++) {
         for (int y = 0; y < view.width; y++) {
-            if (view.matrix.data[x][y] >= max) {
-                max = view.matrix.data[x][y];
+            if (view.matrix.data[(view.matrix.width) * x + y] >= view.matrix.data[(view.matrix.width) * i + j]) {            
+            //if (*(view.matrix.data + x * view.width + y) >= *(view.matrix.data + i * view.width + j)) {
+                //max = *(view.matrix.data + x * view.width + y);
+                max = view.matrix.data[(view.matrix.width) * x + y];
                 i = x;
                 j = y;
             }
         }
     }
 
-    //printf("MAX: %d \n", max);
+    printf("MAX: %d \n", max);
 
-    if (view.matrix.data[i][j] == 0)
+    if (view.matrix.data[(view.matrix.width) * i + j] == 0)
+    //if (*(view.matrix.data + i * view.width + j) == 0)
     {
         strncpy(a_, a + j, strlen(b_));
         traceback_result * result = malloc(sizeof(traceback_result));
@@ -34,25 +40,48 @@ traceback_result *traceback_help(scoring_matrix_view view, const char* a, const 
         return result;
     }
 
+    if (old_i - i > 1) {
+        char prev_b_[strlen(b_)]; // copy of prev
+        strcpy(prev_b_, b_); 
+        b_[0] = b[j-1]; 
+        b_[1] = '-'; 
+        for (int k = 0; k < strlen(prev_b_); k++) {
+            b_[k+2] = prev_b_[k]; // looping through and appending the old string to the end
+        }
+    } else {
+        char prev_b_[strlen(b_)];
+        strcpy(prev_b_, b_); 
+        b_[0] = b[j-1];
+        for (int k = 0; k < strlen(prev_b_); k++) {
+            b_[k+1] = prev_b_[k];
+        }
+    }
+
     //printf("count: %d\n", count);
 
     //if (old_i - i > 1) {
-    if (view.matrix.data[i-1][j] >= view.matrix.data[i-1][j-1]) {
-        b_[count] = '-';
-        //b_[count] = b[j-1];
-    } else {
-        //b_[count] = '-';
-        b_[count] = b[j-1];
-    }
 
-    count++;
+  //*(view.matrix.data + (i-1) * view.width + (j-1))
+
+    //if (*(view.matrix.data + (i-1) * view.width + j) >= *(view.matrix.data + (i-1) * view.width + (j-1))) {
+        //b_[count] = '-';
+        //b_[count] = b[j-1];
+    //} else {
+        //b_[count] = '-';
+       // b_[count] = b[j-1];
+    //}
     
     view.height = i;
     view.width = j;
 
+    //printf("Height: %zu\n", view.height);
+    //printf("Width: %zu\n", view.width);
+
+    //scoring_matrix_view view = {view.matrix.width, view.height, {view.width, view.height, matrix.data}};
+
     //printf("%s\n", b_);
 
-    return traceback_help(view, a, b, b_, i, count);
+    return traceback_help(view, a, b, b_, i);
 
     //printf("%d\n", old_i);
 
@@ -102,6 +131,7 @@ traceback_result *traceback(scoring_matrix_view view, const char* a, const char*
 
 
     char* b_ = malloc(sizeof(char) * strlen(b));
+
     traceback_result * res = traceback_help(view, a, b, b_, 0, count);
     return res;
 
