@@ -20,6 +20,9 @@ void print_smith_waterman(const char *a, const char *b)
 
     traceback_result * result = traceback(matrix_as_view(matrix), a, b);
 
+    //free_matrix(matrix);
+    //freeResult(result);
+
     printf("A: %s\n", result->a_);
     printf("B: %s\n", result->b_);
 }

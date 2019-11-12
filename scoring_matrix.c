@@ -24,20 +24,17 @@ scoring_matrix create_matrix(const char *a, const char *b, int match_score, int 
     int * data = (int*) malloc(width * height * sizeof(int));
     //int* data = malloc(width * height * sizeof(int));
 
-    for (int i = 0; i < height; i++)
-    {
-        for (int j = 0; j < width; j++)
-        {
-            *(data + i * width + j) = 0;
-        }
-    }
-
     for (int i = 1; i < height; i++)
     {
         for (int j = 1; j < width; j++)
         {
+            if (width == 0 || height == 0)
+            {
+                *(data + i*width + j) = 0;
+                continue;
+            }
+            
             int score[3];
-
             score[0] = *(data + ((i-1)*width) + (j-1)) + (a[i-1] == b[j-1] ? match_score : -match_score);
             score[1] = *(data + ((i-1)*width) + j) - gap_cost;
             score[2] = *(data + (i*width) + (j-1)) - gap_cost;
