@@ -31,7 +31,6 @@ int main(int argc, char **argv)
             {
                 char *token = strtok(line, ",");
                 char *waterman[2];
-
                 int w = 0;
 
                 while (token != NULL)
@@ -44,11 +43,11 @@ int main(int argc, char **argv)
                 {
                     int c = 0, d = 0;
                     char *text = waterman[i];
-                    char blank[10] = "";
+                    char blank[100];
 
                     while (text[c] != '\0')
                     {
-                        if (!(text[c] == ' '))
+                        if (!(text[c] == ' ' || text[c] == '\n'))
                         {
                             blank[d] = text[c];
                             d++;
@@ -71,5 +70,6 @@ int main(int argc, char **argv)
         perror("Error in opening file");
         return EXIT_FAILURE;
     }
+
     return EXIT_SUCCESS;
 }
