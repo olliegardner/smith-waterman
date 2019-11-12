@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <ctype.h> // used for isspace()
 
 #include "Smith-Waterman.h"
 
@@ -18,47 +19,57 @@ int main(int argc, char **argv)
     //   call `print_smith_waterman' with the first and second string
     // close the csv file
 
-    FILE * file = fopen(argv[1], "r");
-    char * line = NULL;
-    size_t len = 0;
+    FILE *file = fopen(argv[1], "r");
 
-    if (!file)
+    if (file != NULL)
+    {
+        char line[256];
+
+        while (fgets(line, sizeof line, file) != NULL)
+        {            
+            if (line[0] != '#')
+            {
+                char *token = strtok(line, ",");
+                char *waterman[2];
+
+                int w = 0;
+
+                while (token != NULL)
+                {
+                    waterman[w++] = token;
+                    token = strtok(NULL, ","); // when there are no tokens remaining strtok returns NULL
+                }
+
+                for (int i = 0; i < 2; i++) 
+                {
+                    int c = 0, d = 0;
+                    char *text = waterman[i];
+                    char blank[10] = "";
+
+                    while (text[c] != '\0')
+                    {
+                        if (!(text[c] == ' '))
+                        {
+                            blank[d] = text[c];
+                            d++;
+                        }
+                        c++;
+                    }
+                    blank[d] = '\0';
+                    
+                    waterman[i] = strdup(blank);
+                }
+
+                print_smith_waterman(waterman[0], waterman[1]);
+            }
+        }
+
+        fclose(file);
+    }
+    else
     {
         perror("Error in opening file");
         return EXIT_FAILURE;
     }
-
-    /*while(fgets(buffer, 255, (FILE *) file))
-    {
-        printf("%s\n", buffer);
-    }*/
-
-    while (getline(&line, &len, file))
-    {
-        //if (!starts_with("#", line))
-        //{
-            printf("%S", line);
-
-
-        //}
-    }
-
-    print_smith_waterman("", "");
-
-
-    fclose(file);
-
-    if (line) 
-    {
-        free(line);
-    }
     return EXIT_SUCCESS;
 }
-
-
-/*bool starts_with(const char *pre, const char *str)
-{
-    size_t lenpre = strlen(pre),
-           lenstr = strlen(str);
-    return lenstr < lenpre ? false : memcmp(pre, str, lenpre) == 0;
-}*/
