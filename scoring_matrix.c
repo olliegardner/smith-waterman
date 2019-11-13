@@ -22,36 +22,44 @@ scoring_matrix create_matrix(const char *a, const char *b, int match_score, int 
     int height = strlen(a) + 1;
     int width = strlen(b) + 1;
     int * data = (int*) malloc(width * height * sizeof(int));
-    //int* data = malloc(width * height * sizeof(int));
 
-    for (int i = 1; i < height; i++)
+    scoring_matrix matrix = {width, height, NULL};
+
+    if (data != NULL) // if memory allocation is successful
     {
-        for (int j = 1; j < width; j++)
+        for (int i = 1; i < height; i++)
         {
-            if (width == 0 || height == 0)
+            for (int j = 1; j < width; j++)
             {
-                *(data + i*width + j) = 0;
-                continue;
+                if (width == 0 || height == 0)
+                {
+                    *(data + i*width + j) = 0;
+                    continue;
+                }
+                
+                int score[3];
+                score[0] = *(data + ((i-1)*width) + (j-1)) + (a[i-1] == b[j-1] ? match_score : -match_score);
+                score[1] = *(data + ((i-1)*width) + j) - gap_cost;
+                score[2] = *(data + (i*width) + (j-1)) - gap_cost;
+
+                *(data + i*width + j) = find_max(score);
             }
-            
-            int score[3];
-            score[0] = *(data + ((i-1)*width) + (j-1)) + (a[i-1] == b[j-1] ? match_score : -match_score);
-            score[1] = *(data + ((i-1)*width) + j) - gap_cost;
-            score[2] = *(data + (i*width) + (j-1)) - gap_cost;
-
-            *(data + i*width + j) = find_max(score);
         }
-    }
 
-    scoring_matrix matrix = {width, height, data};
-    matrix_as_view(matrix);
+        matrix.data = data;
+        matrix_as_view(matrix);
+    }
+    else
+    {
+        printf("Memory allocation failed.\n");
+    }
 
     return matrix;
 }
 
 void free_matrix(scoring_matrix matrix)
 {
-    free(&matrix);   
+    free(matrix.data);   
 }
 
 scoring_matrix_view matrix_as_view(scoring_matrix matrix)

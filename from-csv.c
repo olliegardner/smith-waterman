@@ -19,55 +19,63 @@ int main(int argc, char **argv)
     //   call `print_smith_waterman' with the first and second string
     // close the csv file
 
-    FILE *file = fopen(argv[1], "r");
-
-    if (file != NULL)
+    if (argc == 2)
     {
-        char line[256];
+        FILE *file = fopen(argv[1], "r");
 
-        while (fgets(line, sizeof line, file) != NULL)
-        {            
-            if (line[0] != '#')
-            {
-                char *token = strtok(line, ",");
-                char *waterman[2];
-                int w = 0;
+        if (file != NULL)
+        {
+            char line[256];
 
-                while (token != NULL)
+            while (fgets(line, sizeof line, file) != NULL)
+            {            
+                if (line[0] != '#')
                 {
-                    waterman[w++] = token;
-                    token = strtok(NULL, ","); // when there are no tokens remaining strtok returns NULL
-                }
+                    char *token = strtok(line, ",");
+                    char *waterman[2];
+                    int w = 0;
 
-                for (int i = 0; i < 2; i++) 
-                {
-                    int c = 0, d = 0;
-                    char *text = waterman[i];
-                    char blank[100];
-
-                    while (text[c] != '\0')
+                    while (token != NULL)
                     {
-                        if (!(text[c] == ' ' || text[c] == '\n'))
-                        {
-                            blank[d] = text[c];
-                            d++;
-                        }
-                        c++;
+                        waterman[w++] = token;
+                        token = strtok(NULL, ","); // when there are no tokens remaining strtok returns NULL
                     }
-                    blank[d] = '\0';
-                    
-                    waterman[i] = strdup(blank);
+
+                    for (int i = 0; i < 2; i++) 
+                    {
+                        int c = 0, d = 0;
+                        char *text = waterman[i];
+                        char blank[100];
+
+                        while (text[c] != '\0')
+                        {
+                            if (!(text[c] == ' ' || text[c] == '\n'))
+                            {
+                                blank[d] = text[c];
+                                d++;
+                            }
+                            c++;
+                        }
+                        blank[d] = '\0';
+                        
+                        waterman[i] = strdup(blank);
+                    }
+
+                    print_smith_waterman(waterman[0], waterman[1]);
                 }
-
-                print_smith_waterman(waterman[0], waterman[1]);
             }
-        }
 
-        fclose(file);
+            fclose(file);
+        }
+        else
+        {
+            printf("Error in opening file.\n");
+            return EXIT_FAILURE;
+        }
     }
     else
     {
-        perror("Error in opening file");
+        printf("Argument format: from-csv [filename]\n");
         return EXIT_FAILURE;
     }
 

@@ -7,68 +7,90 @@ traceback_result *traceback_recursive(scoring_matrix_view view, const char* a, c
 {
     char* a_ = malloc(sizeof(char) * strlen(a));
 
-    int i = 0;
-    int j = 0;
-
-    for (int x = 0; x < view.height; x++)
+    if (a_ != NULL)
     {
-        for (int y = 0; y < view.width; y++)
+        int i = 0;
+        int j = 0;
+
+        for (int x = 0; x < view.height; x++)
         {
-            if (view.matrix.data[(view.matrix.width) * x + y] >= view.matrix.data[(view.matrix.width) * i + j]) 
-            {            
-                i = x;
-                j = y;
+            for (int y = 0; y < view.width; y++)
+            {
+                if (view.matrix.data[(view.matrix.width) * x + y] >= view.matrix.data[(view.matrix.width) * i + j]) 
+                {            
+                    i = x;
+                    j = y;
+                }
             }
         }
-    }
 
-    if (view.matrix.data[(view.matrix.width) * i + j] == 0)
-    {
-        strncpy(a_, a + j, strlen(b_));
-        traceback_result * result = malloc(sizeof(traceback_result));
-        result->a_ = a_;
-        result->b_ = b_;
-        return result;
-    }
-
-    if (old_i - i > 1)
-    {
-        char prev_b_[strlen(b_)]; // copy of prev
-        strcpy(prev_b_, b_); 
-        b_[0] = b[j-1]; 
-        b_[1] = '-'; 
-
-        for (int k = 0; k < strlen(prev_b_); k++)
+        if (view.matrix.data[(view.matrix.width) * i + j] == 0)
         {
-            b_[k+2] = prev_b_[k]; // looping through and appending the old string to the end
+            strncpy(a_, a + j, strlen(b_));
+            traceback_result * result = malloc(sizeof(traceback_result));
+
+            if (result != NULL)
+            {
+                result->a_ = a_;
+                result->b_ = b_;
+            }
+            else
+            {
+                printf("Memory allocation failed.\n");
+            }
+            return result;
         }
+
+        if (old_i - i > 1)
+        {
+            char prev_b_[strlen(b_)]; // copy of prev
+            strcpy(prev_b_, b_); 
+            b_[0] = b[j-1]; 
+            b_[1] = '-'; 
+
+            for (int k = 0; k < strlen(prev_b_); k++)
+            {
+                b_[k+2] = prev_b_[k]; // looping through and appending the old string to the end
+            }
+        }
+        else
+        {
+            char prev_b_[strlen(b_)];
+            strcpy(prev_b_, b_); 
+            b_[0] = b[j-1];
+            
+            for (int k = 0; k < strlen(prev_b_); k++)
+            {
+                b_[k+1] = prev_b_[k];
+            }
+        }
+        
+        view.height = i;
+        view.width = j;
+
+        return traceback_recursive(view, a, b, b_, i);
     }
     else
     {
-        char prev_b_[strlen(b_)];
-        strcpy(prev_b_, b_); 
-        b_[0] = b[j-1];
-        
-        for (int k = 0; k < strlen(prev_b_); k++)
-        {
-            b_[k+1] = prev_b_[k];
-        }
+        printf("Memory allocation failed.\n");
+        return traceback_recursive(view, a, b, b_, 0);
     }
-    
-    view.height = i;
-    view.width = j;
-
-    return traceback_recursive(view, a, b, b_, i);
 }
 
 traceback_result *traceback(scoring_matrix_view view, const char* a, const char* b)
 {
     char* b_ = malloc(sizeof(char) * strlen(b));
-    traceback_result * res = traceback_recursive(view, a, b, b_, 0);
-    return res;
+    traceback_result * result = NULL;
+
+    if (b_ != NULL) result = traceback_recursive(view, a, b, b_, 0);
+    else printf("Memory allocation failed.\n");
+
+    return result;
 }
 
 void freeResult(traceback_result *result)
 {
-    free(&result);
+    free(result->a_);
+    free(result->b_);
+    free(result);
 }
