@@ -92,6 +92,11 @@ traceback_result *traceback(scoring_matrix_view view, const char* a, const char*
 void freeResult(traceback_result *result)
 {
     free(result->a_); // free memory allocated with malloc
+    result->a_ = NULL;
+
     free(result->b_);
+    result->b_ = NULL; // good practice to assign NULL once pointer has been freed
+
     free(result);
+    result = NULL;
 }
