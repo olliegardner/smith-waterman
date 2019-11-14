@@ -23,7 +23,7 @@ scoring_matrix create_matrix(const char *a, const char *b, int match_score, int 
 {
     int height = strlen(a) + 1; // create width and height to length of string plus 1
     int width = strlen(b) + 1;
-    int * data = (int*) malloc(width * height * sizeof(int)); // allocate memory
+    int * data = calloc(width * height, sizeof(int)); // allocate memory and initialise memory to 0
 
     scoring_matrix matrix = {width, height, NULL};
 
@@ -36,7 +36,7 @@ scoring_matrix create_matrix(const char *a, const char *b, int match_score, int 
                 if (width == 0 || height == 0)
                 {
                     *(data + i*width + j) = 0; // populate 1st row and column with 0s
-                    continue;
+                    continue; // next iteration
                 }
                 
                 // calculates scoring matrix as per formula
