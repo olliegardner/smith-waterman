@@ -17,31 +17,17 @@ typedef struct {
 // The pseudo code (in a Python-like syntax)
 // for this function looks like:
 // 
-// def traceback(view, a, b, b_='', old_i=0):
-//     i, j = find_last_index_of_max_value(view)
-//
-//     if (view[i][j] == 0):
-//         a_ = a[j:j+len(b_)]
-//         return a_, b_
+// def traceback(H, a, b, b_='', old_i=0):
+//     i, j = find_max_value(H)
+//     
+//     if H[i, j] == 0:
+//        a_ = a[j:j+len(b_)]
+//        return a_, b_
 //     if (old_i - i > 1):
-//         b_ = b[j - 1] + b_
+//        b_ = b[j - 1] + '-' + b_
 //     else:
-//         b_ = b[j - 1] + '-' + b_ 
-//     return traceback(view[0:i][0:j], a, b, b_, i)
-
-
-/*
-def traceback(H, a, b, b_='', old_i=0):
-    i, j = find_max_value(H)
-    if H[i, j] == 0:
-        a_ = a[j:j+len(b_)]
-        return a_, b_
-    if (old_i - i > 1):
-        b_ = b[j - 1] + '-' + b_
-    else:
-        b_ = b[j - 1] + b_
-    return traceback(H[0:i, 0:j], a, b, b_, i)
-*/
+//        b_ = b[j - 1] + b_
+//     return traceback(H[0:i, 0:j], a, b, b_, i)
 
 traceback_result *traceback(scoring_matrix_view view,
                             const char *a,
