@@ -1,13 +1,9 @@
-# Coursework 1 - Systems Programming (H) 2019/2020
+# Smith-Waterman Algorithm
 
-**This coursework is due on the 15th November 2019 16:00 UTC.**
-**At that time you must have committed and pushed all your changes to the**
-**master branch of stgit.dcs.gla.ac.uk**
+This project was a coursework task for the Systems Programming (H) course at the University of Glasgow and it was to be written in C.
 
 The Smith–Waterman algorithm performs local sequence alignment.
 It determines similar regions between two strings of nucleic acid
-or protein sequences. In this coursework you implement this algorithm in
-the C programming language.
+or protein sequences.
 
-You find the coursework description on moodle here:
-https://moodle.gla.ac.uk/course/view.php?id=15388#section-6
+https://en.wikipedia.org/wiki/Smith%E2%80%93Waterman_algorithm
